@@ -1,0 +1,83 @@
+---
+title: "R Notebook"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+#INTRODUCTION 
+*Used library:
+```{r}
+library(visdat)
+library(skimr)
+library(DataExplorer)
+library(corrplot)
+library(ggplot2)
+library(GGally)
+```
+
+*Fixing dataset:
+```{r}
+dataset <- read.csv(file.choose())
+row.names(dataset) <- dataset$X
+dataset <- dataset[,2:10]
+dataset$Class_variable <- factor(dataset$Class_variable, labels=c('No', 'Yes'))
+attach(dataset)
+```
+
+*
+```{r}
+str(dataset)
+```
+The dataset is taken from the National Institute of Diabetes and Digestive and Kidney Diseases (insert link of the dataset here). Several constraints were placed on the selection of these instances from a larger database, in particular, all patients here are females at least 21 years old of Pima Indian heritage.
+
+(The objective of the dataset is to diagnostically predict whether or not a patient has diabetes, based on certain diagnostic measurements included in the dataset <- WE CAN INSERT THIS AS ONE OF THE QUESTIONS GUIDING THE ANALYSIS)
+
+The dataset contains about 60% of the original one and is composed by 503 observations of 9 variables and there aren't any missing values:
+
+-Predictor variables:
+  - Discrete variable:
+.Pregnant times -> number of times pregnancies that the patient has had
+
+  - Continuous variables: 
+.Glucose tolerance test -> plasma glucose concentration after 2 hours of the oral glucose tolerance test. It measures how well the body can process a large amount of sugar 
+.Diastolic blood pressure -> (mm Hg) measure of the diastolic blood pressure  
+.Triceps skin fold thickness -> (mm) measure the body fat (mm) 
+.Serum insulin -> (mu U/ml) therapeutic tool of diagnosed diabetes throw the measurement of serum insulin level every 2 hours
+.Body mass index -> (weight in kg/(height in m)^2) measure of body fat based on height and weight
+.Diabetes pedigree function -> function that scores the likelihood of diabetes based on family history
+Age -> (years) age of the patients
+
+-Response variable:
+.Class variable -> Outcomes, 0 if the patient has no diabetes, 1 if the patient has diabetes
+
+
+Questions guiding our analysis.
+
+#EXPLORATORY DATA ANALYSIS
+##Univariate analysis
+```{r}
+skim(dataset)
+```
+
+
+```{r}
+ggplot(dataset,aes(x=pregnant_times))+
+  geom_bar(aes(y = (..count..)/sum(..count..)))+
+  scale_y_continuous(labels=scales::percent)+ 
+  ylab('Percentage')+
+  xlab('Pregnant times')+
+  ggtitle('Barplot of "pregnant_times" variable')
+```
+
+
+##Multivariate analysis
+
+```{r}
+ggpairs(dataset, aes(colour=Class_variable), lower = list(continuous = wrap("points", size=0.6)), cardinality_threshold=17)
+```
+Comment here about scatterplot of the whole variables.
+
+
+
+
